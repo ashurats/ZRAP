@@ -1,0 +1,67 @@
+ @Metadata.layer: #CORE
+
+annotate entity ZC_ZAB_PO_ITEM with
+{
+
+  // Basic Facet
+  @UI.facet: [{ position: 10 , label: 'PO Item' , type: #IDENTIFICATION_REFERENCE  }] 
+           
+
+
+  @UI.lineItem: [{ position:  5  , criticality: 'Materialind', label: 'Status'}]  // When we add criticality it will show as RED,GREEN OR YELLOW status image in the filed column
+                                                                                  // 1 = Red/Negativ, 2 = Yellow/Critical, 3 = Positive/Green
+//  @EndUserText.label: 'Status' 
+   MaterialStatus;  //
+
+  @UI.lineItem: [{ position:  10 }]
+  @EndUserText.label: 'PO no.'
+  @UI.identification: [{ position: 10 }]
+  Ebeln;
+  @UI.lineItem: [{ position:  20 }]
+  @EndUserText.label: 'PO Item'
+  @UI.identification: [{ position: 20 }]
+  Ebelp;
+  @UI.lineItem: [{ position:  30 }]
+  @EndUserText.label: 'Material No.'
+  @UI.identification: [{ position: 30 }]
+  Matnr;
+  @UI.lineItem: [{ position:  40 }]
+  @EndUserText.label: 'Plant'
+  @UI.identification: [{ position: 40 }]
+  Werks;
+  @UI.lineItem: [{ position:  50 }]
+  @EndUserText.label: 'Plant Name'
+  @UI.identification: [{ position: 50 }]
+  PlantName;
+  @UI.lineItem: [{ position:  60 }]
+  @EndUserText.label: 'Sloc.'
+  @UI.identification: [{ position: 60 }]
+  Lgort;
+
+  @UI.lineItem: [{ position:  70 }]
+  @EndUserText.label: 'Sloc.Name'
+  @UI.identification: [{ position: 70 }]
+
+  SlocName;
+  @UI.lineItem: [{ position:  80 }]
+  @EndUserText.label: 'Quanity'
+  @UI.identification: [{ position: 80 }]
+  Menge;
+  @UI.lineItem: [{ position:  90 }]
+  @EndUserText.label: 'UOM'
+  @UI.identification: [{ position: 90 }]
+  Meins;
+  @UI.lineItem: [{ position:  100 }]
+  @EndUserText.label: 'Price'
+  @UI.identification: [{ position: 100 }]
+  Netpr;
+  @UI.lineItem: [{ position:  110 }]
+  @EndUserText.label: 'Currency'
+  @UI.identification: [{ position: 110 }]
+  Waers;
+  @UI.lineItem: [{ position:  120 }]
+  @EndUserText.label: 'Date & Time'
+  @UI.identification: [{ position: 120 }]
+  Lastdatechanged;
+
+}

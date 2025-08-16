@@ -1,0 +1,176 @@
+@Metadata.layer: #CORE
+
+@UI:{
+    headerInfo:{
+
+     title:{ value: 'Ebeln'},
+     description:{value: 'ConValue' },
+
+     typeName: 'Purchase Order Data',
+     typeNamePlural: 'Purchase Order Data',
+
+      typeImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8f/SAP-Logo.svg'
+
+     }
+
+       // presentationVariant: [{ sortOrder: [{ by: 'Ebeln' , direction: #DESC }] }]
+      }
+
+@Search.searchable: true   /// Important to enable Fuzzy search. Needed for Fuzzy Search. 
+// IMP - Fuzzy search will come as a common field at top no description or Field Label can be given
+
+annotate entity ZC_ZAB_PO_HEADER with
+{
+
+  @UI.facet: [
+
+  // Header facet
+
+  { position: 05, purpose: #HEADER, type: #DATAPOINT_REFERENCE, targetQualifier: '_HEAD1' },
+
+  { position: 08, purpose: #HEADER, type: #DATAPOINT_REFERENCE, targetQualifier: '_HEAD2' },
+
+  { position: 10, label: 'PO Header' , type: #IDENTIFICATION_REFERENCE  },
+
+  { position: 20 , label: 'PO Item' , type: #LINEITEM_REFERENCE , targetElement: '_ITEM' } ,
+
+  //  Field Group reference   - To Create Individual Tabs like Vendor &  Company Code separate tabs
+
+  //  { position: 30 , label: 'Vendor Data' , type: #FIELDGROUP_REFERENCE, qualifier: 'FG1'}, //If only 1 extra tab is needed other than Header and Item + Vendor then qualifier not needed
+
+  //  { position: 40 , label: 'Company  Data' , type: #FIELDGROUP_REFERENCE, qualifier: 'FG2' }, // Here Tab becomes Header, Item, Vendor + Company Data so Qualifier is also needed
+
+   //  Collection Facet   -  To combine two Tabe
+
+  { position: 30 , label: 'Vendor+Company Data' , type: #COLLECTION , id: '_PARENT' },
+
+  // Child Facet - Individual tabs under Parent ID
+
+  { position: 10 , label: 'Vendor Data' , type: #FIELDGROUP_REFERENCE , targetQualifier: 'FG1' , parentId: '_PARENT' },
+  { position: 20 , label: 'Company Data' , type: #FIELDGROUP_REFERENCE , targetQualifier:  'FG2' , parentId: '_PARENT'}
+
+
+
+   ]
+
+
+  @UI.lineItem: [{ position: 5 }]
+  @EndUserText.label: 'Logo'
+  @UI.identification: [{ position: 5 }]
+  LogoUrl;
+
+  @UI.lineItem: [{ position: 10 }]
+  @EndUserText.label: 'PO Number'
+  @UI.identification: [{ position: 10 }]
+  @UI.selectionField: [{ position:  10 }]     // To enable F4 for the field in header 
+  @Consumption.valueHelpDefinition: [{ entity.name: 'zi_com_zab_po_header' , entity.element: 'Ebeln' }]  // CDS View to provide data fpr F4
+
+  @Search.fuzzinessThreshold: 0.7     // Needed for Fuzzy Search. Sap recommends to keep threshold 0.7
+  @Search.defaultSearchElement: true  // Needed for Fuzzy Search.
+  @Search.ranking: #HIGH              // Needed for Fuzzy Search. Imp : We can have both Fuzzy search and F4 for a field 
+  Ebeln; 
+
+  @UI.lineItem: [{ position: 20 }]
+  @EndUserText.label: 'Company Code'
+  @UI.identification: [{ position: 20 }]
+  Bukrs;
+
+  @UI.lineItem: [{ position: 30 }]
+  @EndUserText.label: 'Document Type'
+  @UI.identification: [{ position: 30 }]
+  Bsart;
+
+  @UI.lineItem: [{ position: 40 }]
+  @EndUserText.label: 'Vendor'
+  //  @UI.identification: [{ position: 40 }]
+  @UI.fieldGroup: [{ position: 10  , qualifier: 'FG1'}]
+  @Search.fuzzinessThreshold: 0.7     // Needed for Fuzzy Search. Sap recommends to keep threshold 0.7
+  @Search.defaultSearchElement: true  // Needed for Fuzzy Search.
+  @Search.ranking: #MEDIUM           // Needed for Fuzzy Search.
+  Lifnr;
+
+  @UI.lineItem: [{ position: 45 }]
+  //@UI.identification: [{  position: 45 }]
+  @UI.fieldGroup: [{ position: 20 , qualifier: 'FG1'}]
+  @EndUserText.label: 'Vendor Address'
+  VenAddress;
+
+
+  @UI.lineItem: [{ position: 50 }]
+  @EndUserText.label: 'Country'
+  @UI.identification: [{ position: 50 }]
+  @UI.selectionField: [{ position:  50 }]
+  // --------------------- F4 Help  Techniques --------------------------
+  //  @Consumption.valueHelpDefinition: [{ entity.name: 'I_Country' , entity.element: 'Country' }]  - Method 1 By using std SAP provided data source of the CDS with _vh
+  //  @Consumption.valueHelpDefinition: [{ entity.name: ' ZCNTRY_VH' , entity.element: 'Country' }] - Method 2 By copying the std VH CDS into local cds and use it
+//   @Consumption.valueHelpDefinition: [{ entity.name: 'ZI_COUNTRY_DOMAIN_VH' , entity.element: 'Country' }] //- Method 3 By creating CDS of domain having fixed value using CDS
+                                                                                                             // DDCDS_CUSTOMER_DOMAIN_VALUE_T  ---  CDS which gives us domain description
+                                                                                                             // and values on top of it we can create our own cds
+
+  //   @Consumption.filter:{ mandatory : true, defaultValue: 'US' } // For making search field mandatory and or give default value to the search
+  //   @Consumption.filter:{ mandatory : true, defaultValue: 'US' , selectionType: #SINGLE }
+  @Search.fuzzinessThreshold: 0.7     // Needed for Fuzzy Search. Sap recommends to keep threshold 0.7
+  @Search.defaultSearchElement: true  // Needed for Fuzzy Search.
+  @Search.ranking: #MEDIUM           // Needed for Fuzzy Search.
+  Land1;
+
+
+  @UI.lineItem: [{ position: 60 }]
+  @EndUserText.label: 'Date & Time'
+  @UI.identification: [{ position: 60 }]
+  Lastdatetime;
+
+
+  @UI.lineItem: [{ position: 90 }]
+  //   @UI.identification: [{  position: 90 }]
+  @UI.fieldGroup: [{ position: 20 , qualifier: 'FG2'}]
+  @EndUserText.label: 'Company Name'
+  @UI.dataPoint:{  title: 'Company Name' , qualifier: '_HEAD1'}
+  ComName;
+
+  @UI.lineItem: [{ position: 100 }]
+  //   @UI.identification: [{  position: 80 }]
+  @UI.fieldGroup: [{ position: 30 , qualifier: 'FG1'}]
+  @EndUserText.label: 'Vendor Name'
+  @UI.dataPoint:{  title: 'Vendor Name' ,  qualifier: '_HEAD2'   }
+  @Search.fuzzinessThreshold: 0.7     // Needed for Fuzzy Search. Sap recommends to keep threshold 0.7
+  @Search.defaultSearchElement: true  // Needed for Fuzzy Search.
+  @Search.ranking: #MEDIUM           // Needed for Fuzzy Search.
+
+  Name1;
+
+  // ---------------------------------------------------------
+  // This below annotation is to Concat Columns
+  @UI.fieldGroup: [{ qualifier: 'Multidkp' }]
+  Field_1;
+
+  @UI.fieldGroup: [{ qualifier: 'Multidkp' }]
+  Field_2;
+
+  @UI.fieldGroup: [{ qualifier: 'Multidkp' }]
+  Field_3;
+
+  // MultiFieldsCol
+  @UI: {
+    fieldGroup: [{ qualifier: 'Multidkp' }],
+    lineItem: [
+      {
+        type: #AS_FIELDGROUP,
+        valueQualifier: 'Multidkp',
+        label: 'Multiple Fields in One Column',
+        importance: #HIGH,
+        position: 110
+      }
+    ]
+  }
+  Field_4;
+  //--------------------------------------------------------------
+
+}
+
+//
+//ZI_DOMAIN_VH (Data Definition) does not exist.  --------------------------->>>  ZI_COUNTRY_DOMAIN_VH
+//
+//ZI_LAND_VH (Data Definition) does not exist.          ------------------------->>> ZCNTRY_VH
+//
+//ZI_ZCOM_ZAB_COUNTRY_LOGO (Data Definition) does not exist.  ----------------->> ZI_COM_COUNTRY_LOGO

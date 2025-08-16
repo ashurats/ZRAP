@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for PO Header'
+define service ZSD_ZAB_PO_HEADER {
+  expose ZC_ZAB_PO_HEADER as POHEADER;   
+  expose ZC_ZAB_PO_ITEM as POITEM;
+}
